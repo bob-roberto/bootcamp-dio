@@ -48,5 +48,11 @@ public class ActiveController {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @ApiOperation(value = "Find actives by current date")
+    @GetMapping(value = "/find-by-current-date", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ActiveDTO>> findByCurrentDate() {
+        return ResponseEntity.ok(service.findByCurrentDate());
+    }
+
 
 }

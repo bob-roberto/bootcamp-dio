@@ -9,8 +9,10 @@ import com.project.bootcamp.repository.ActiveRepository;
 import com.project.bootcamp.util.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +54,7 @@ public class ActiveService {
         return activeDTO;
     }
 
-    @Transactional
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<ActiveDTO> findAll() {
         List<Active> list = repository.findAll();
         if (list.isEmpty()) {
@@ -61,9 +63,16 @@ public class ActiveService {
         return mapper.toDto(list);
     }
 
-    @Transactional
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public ActiveDTO findById(Long id) {
         return repository.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(NotFoundException::new);
+    }
+
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public List<ActiveDTO> findByCurrentDate() {
+        return repository.findByCurrentDate()
                 .map(mapper::toDto)
                 .orElseThrow(NotFoundException::new);
     }
