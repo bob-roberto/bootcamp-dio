@@ -1,16 +1,14 @@
 package com.project.bootcamp;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSwagger2
 public class BootcampApplication {
 
     public static void main(String[] args) {
@@ -18,9 +16,13 @@ public class BootcampApplication {
     }
 
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.basePackage("com.project.bootcamp.controller"))
-                .paths(PathSelectors.any()).build();
+    public OpenAPI customOpenAPI(@Value("${application.description}") String description, @Value("${application.version}") String version) {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("sample application API")
+                        .version(description)
+                        .description(version)
+                        .termsOfService("http://swagger.io/terms/")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
 }
